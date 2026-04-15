@@ -5,19 +5,18 @@
 
 namespace core_numeric{
     template<Iterable C>
-    requires Addable<typename C::value_type>
-    double mean(const C& container){
+    requires Addable<typename C::value_type> && Divisible<typename C::value_type>
+    auto mean(const C& container){
         using T = typename C::value_type;
         T result{};
         
-        size_t i = 0;
+        size_t size = container.size();
         for (const auto& value : container)
         {
-            result = result + value;
-            i++;
+            result = result + value;    
         }
         
-        return result / i;
+        return result / size;
     }
     
     template<Iterable C>
