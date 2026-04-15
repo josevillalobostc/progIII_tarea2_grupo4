@@ -22,5 +22,5 @@ concept Iterable = requires(T a){
 
 template <typename T>
 concept Comparable = requires(T a, T b){
-    {a > b} -> std::same_as<T>;  
+    {a > b} -> std::same_as<bool>;  
 };
