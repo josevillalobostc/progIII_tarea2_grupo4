@@ -36,17 +36,24 @@ namespace core_numeric{
     }
     
     template<typename... Ts>
-    requires requires(Ts... xs) { (... + xs);}
+    requires (Addable<Ts> && ...)
     auto sum_variadic(Ts... xs){
         return (xs + ...);
     }
     
     template<typename... Ts>
-    requires requires(Ts... xs) { (... + xs);}
+    requires (Addable<Ts> && ...)
     double mean_variadic(Ts... xs){
         auto suma = (xs + ...);
         return suma / sizeof...(xs);
     }
     
+    template<typename T, typename... Ts>
+    requires (Comparable<T> && ... && Comparable<Ts>)
+    auto max_variadic(T prim, Ts... rest){
+        auto max = prim;
+        ((rest > max ? max = rest : max), ...);
+        return max;
+    }
     
 }
