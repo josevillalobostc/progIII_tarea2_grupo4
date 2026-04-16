@@ -21,7 +21,7 @@ namespace core_numeric{
     }
     
     template<Iterable C>
-    requires Addable<typename C::value_type>
+    requires Addable<typename C::value_type> && Divisible<typename C::value_type>
     double variance(const C& container){
         using T=typename C::value_type;
         T result{};
@@ -48,7 +48,7 @@ namespace core_numeric{
     }
     
     template<Iterable C,typename Func>
-    requires Addable<invoke_result_t<Func, typename C::value_type>>
+    requires Addable<std::invoke_result_t<Func, typename C::value_type>>
     auto transform_reduce(const C& container, Func transformer) {
         using ResultType = std::invoke_result_t<Func, typename C::value_type>;
         ResultType result{};
@@ -69,6 +69,8 @@ namespace core_numeric{
         return suma / sizeof...(xs);
     }
 
+    template<typename... Ts>
+    requires (Addable<Ts>&&...) && (Divisible<Ts>&&...)
     double variance_variadic(Ts...xs){
     double mean=mean_variadic(xs...);
     double suma=(pow(static_cast<double>(xs)-m,2)+...);
