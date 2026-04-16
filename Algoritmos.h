@@ -22,13 +22,27 @@ namespace core_numeric{
     template<Iterable C>
     requires Addable<typename C::value_type> && Divisible<typename C::value_type>
     double variance(const C& container){
-        using T=typename C::value_type;
+        using T = typename C::value_type;
         T result{};
-        size_t _=0;
-        for(const auto& value:container){
-            result=result+pow(value-core_numeric::mean(value:container),2);_++;
+        size_t _ = 0;
+        double m = core_numeric::mean(container);
+    
+        if constexpr (std::is_integral_v<T>) {
+            for(const auto& value : container){
+                result = result + pow(value - m, 2);
+                _++;
+            }
+            result = result / (container.size() - 1);
+        } 
+        else {
+            for(const auto& value : container){
+                result = result + pow(value - m, 2);
+                _++;
+            }
+            result = result / container.size();
         }
-        result=result/container.size()-1;
+    
+        return result;
     }
 
     template<Iterable C>
@@ -72,10 +86,10 @@ namespace core_numeric{
     requires (Addable<Ts>&&...) && (Divisible<Ts>&&...)
     double variance_variadic(Ts...xs){
     double mean=mean_variadic(xs...);
-    double suma=(pow(static_cast<double>(xs)-m,2)+...);
+    double suma=(pow(static_cast<double>(xs)-mean,2)+...);
     size_t n=sizeof...(xs);
-    if(n<=1){return 0.0};
-    return sum_sq_diff/(n - 1);
+    if(n<=1){return 0.0;}
+    return suma/(n - 1);
     }
 
     template<typename T, typename... Ts>
